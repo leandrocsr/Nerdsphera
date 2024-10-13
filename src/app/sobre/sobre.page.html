@@ -1,0 +1,138 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button style="opacity: 0; pointer-events: none;">
+        <ion-icon slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <img src="assets/NerdSphera.svg" id="logo" alt="NerdSphera Logo" />
+
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="header-content">
+    <h2>Equipe do Projeto</h2>
+    <img src="assets/logo-unisuam.png" alt="Logo Unisuam" class="logo-unisuam" />
+    <p>Centro Universitário Augusto Motta - Unisuam</p>
+    <p>Projeto 2024.2 - Aplicativo Mobile</p>
+    <p>Curso: ADS - Presencial</p>
+    <p>Unidade: Bonsucesso</p>
+    <p>Turma: ADS0301M</p>
+    <p>Toque no card para expandir</p>
+  </div>
+
+  <ion-card>
+    <ion-item id="open-modal-Guilherme" lines="none">
+      <ion-avatar slot="start">
+        <img src="assets/fotos/guilherme.png" />
+      </ion-avatar>
+      <ion-label>
+        <h2>Guilherme Henrique Rabelo Custodio</h2>
+        <p>Matrícula: 23205669</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+
+  <ion-card>
+    <ion-item id="open-modal-Leandro" lines="none">
+      <ion-avatar slot="start">
+        <img src="assets/fotos/leandro.png" />
+      </ion-avatar>
+      <ion-label>
+        <h2>Leandro Cesar Dos Santos Rodrigues Mello</h2>
+        <p>Matrícula: 23202167</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+
+  <ion-card>
+    <ion-item id="open-modal-Tassia" lines="none">
+      <ion-avatar slot="start">
+        <img src="assets/fotos/tassia.png" />
+      </ion-avatar>
+      <ion-label>
+        <h2>Tassia Lima Lago Barbosa</h2>
+        <p>Matrícula: 23204328</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+
+  <ion-button expand="full" class="transparent-button" href="#">
+    <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+    Voltar
+  </ion-button>
+
+  <ion-modal trigger="open-modal-Guilherme">
+    <ng-template>
+      <ion-toolbar>
+        <ion-title>Aluno</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="dismissModal()">Fechar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+      <ion-card>
+        <div class="modal-content">
+          <img alt="Silhouette of mountains" src="assets/fotos/guilhermeExp.png" />
+          <ion-card-header>
+            <ion-card-title>Guilherme Henrique Rabelo Custodio</ion-card-title>
+          </ion-card-header>      
+          <ion-card-content>
+            Matrícula: 23205669
+          </ion-card-content>
+        </div>
+      </ion-card>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal trigger="open-modal-Leandro">
+    <ng-template>
+      <ion-toolbar>
+        <ion-title>Aluno</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="dismissModal()">Fechar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+      <ion-card>
+        <div class="modal-content">
+          <img alt="Silhouette of mountains" src="assets/fotos/leandroExp.png" />
+          <ion-card-header>
+            <ion-card-title>Leandro Cesar Dos Santos Rodrigues Mello</ion-card-title>
+          </ion-card-header>      
+          <ion-card-content>
+            Matrícula: 23202167
+          </ion-card-content>
+        </div>
+      </ion-card>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal trigger="open-modal-Tassia">
+    <ng-template>
+      <ion-toolbar>
+        <ion-title>Aluno</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="dismissModal()">Fechar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+      <ion-card>
+        <div class="modal-content">
+          <img alt="Silhouette of mountains" src="assets/fotos/tassiaExp.png" />
+          <ion-card-header>
+            <ion-card-title>Tassia Lima Lago Barbosa</ion-card-title>
+          </ion-card-header>      
+          <ion-card-content>
+            Matrícula: 23204328
+          </ion-card-content>
+        </div>
+      </ion-card>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

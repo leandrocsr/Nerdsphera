@@ -1,0 +1,99 @@
+.header-content {
+  text-align: center;
+  padding: 20px;
+  color: white;
+}
+
+#logo {
+  height: 50px; 
+  margin: auto; 
+  margin-top: 10px;
+  display: block;
+}
+  
+ion-toolbar {
+  --background: #000000;
+  --color: white;
+
+  --min-height: 30px;
+  --padding-top: 5px;
+  --padding-bottom: 5px;
+}
+
+ion-content {
+  --background: linear-gradient(to bottom, #190055, #6a0dad);
+}
+  
+.logo-unisuam {
+  width: 80px;
+  margin: 10px auto;
+}
+  
+ion-card {
+  background-color: #f3f4f6;
+  min-height: 80px;
+  margin: 10px;
+  border-radius: 15px; 
+}
+
+ion-item {
+  color: rgb(0, 0, 0);
+  --ion-item-background: #f3f4f6;
+  border-radius: 10px;
+}
+
+ion-avatar img {
+  border-radius: 50%;
+}
+
+ion-button {
+  margin-top: 20px;
+}
+
+.transparent-button {
+  --background: transparent;  
+  --border-radius: 10px;      
+  --color: white;             
+  --box-shadow: none;         
+}
+
+.transparent-button:hover {
+  --background: rgba(255, 255, 255, 0.1);  
+}
+
+ion-modal {
+  --border-radius: 16px;
+  --max-width: 90%;
+  --max-height: 90%;
+  --width: fit-content;
+  --height: fit-content;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+ion-modal::part(backdrop) {
+  background: rgba(209, 213, 219, 0.8);
+}
+
+ion-modal ion-card {
+  max-width: 90vw;
+  margin: auto;
+
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 0%;
+}
+
+.modal-content img {
+  width: 100%;
+  max-width: 300px; 
+}
+
+ion-card-header, ion-card-content {
+  width: 100%;
+  max-width: 300px; 
+  text-align: center;
+}

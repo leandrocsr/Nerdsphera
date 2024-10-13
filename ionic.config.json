@@ -1,0 +1,7 @@
+{
+  "name": "Nerdsphera",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
