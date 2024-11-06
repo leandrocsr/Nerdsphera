@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button style="opacity: 0; pointer-events: none;">
+        <ion-icon slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <img src="assets/NerdSphera.svg" id="logo" alt="NerdSphera Logo" />
+
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button tab="noticias">
+        <ion-icon name="earth"></ion-icon>
+        <ion-label>Notícias</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="filmes">
+        <ion-icon name="film"></ion-icon>
+        <ion-label>Filmes</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="series">
+        <ion-icon name="tv"></ion-icon>
+        <ion-label>Séries</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="jogos">
+        <ion-icon name="game-controller"></ion-icon>
+        <ion-label>Jogos</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="animacoes">
+        <ion-icon name="star"></ion-icon>
+        <ion-label>Animações</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-content>

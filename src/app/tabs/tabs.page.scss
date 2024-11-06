@@ -1,0 +1,21 @@
+.header-content {
+    text-align: center;
+    padding: 20px;
+    color: white;
+}
+
+#logo {
+    height: 50px; 
+    margin: auto; 
+    margin-top: 10px;
+    display: block;
+}
+
+ion-toolbar {
+    --background: linear-gradient(to bottom, #180036, #2301a1);
+    --color: white;
+
+    --min-height: 30px;
+    --padding-top: 5px;
+    --padding-bottom: 5px;
+}
