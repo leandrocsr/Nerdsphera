@@ -1,0 +1,16 @@
+ion-title img {
+  height: 30px;
+}
+
+ion-card-subtitle {
+  color: #007f5f; /* Cor da categoria */
+}
+
+ion-searchbar {
+  margin-top: 70px; /* Ajuste para a altura do header da página de tabs */
+  z-index: 1000; /* Garante que fique acima de outros elementos */
+}
+
+ion-breadcrumbs {
+  padding-top: 120px; /* Ajuste para não colar no search bar */
+}
