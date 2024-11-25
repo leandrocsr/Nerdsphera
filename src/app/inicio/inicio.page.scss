@@ -1,0 +1,76 @@
+ion-content {
+    --background: none; 
+    background-image: 
+      url('/assets/estrelas.png'), 
+      linear-gradient(to bottom, #000428, #004e92); 
+    background-size: cover; 
+    background-position: center top, center; 
+    background-repeat: no-repeat, no-repeat; 
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 16px;
+    position: relative; /* Permite posicionar o planeta e o botão */
+  }
+  .logo-container {
+    margin-bottom: 5px;
+    align-self: center;
+  }
+  .logo {
+    width: 300px;
+    height: auto;
+  }
+  .intro-text{
+    font-family:'Exo 2', sans-serif;
+    text-align: center;
+    margin: 0px;
+    padding: 0px 24px;
+    color: white;
+    font-style: italic;
+    font-size: 24px;
+    font-weight: bolder;
+    text-shadow: 2px 2px 6px rgb(0, 0, 0);
+    z-index: 2; /* Mantém o texto acima do planeta */
+    position: relative; /* Facilita o posicionamento em relação ao planeta */
+  }
+  .button1:hover {
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+  }
+  .blurred-button {
+    font-family:'Exo 2', sans-serif;
+    color: white;
+    font-size: 24px;
+    font-weight: bolder;
+    border: none;
+    border-radius: 14px;
+    margin-top: 50px;
+    z-index: 2; /* Garante que o botão fique acima do planeta */
+    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.5); /* Exemplo de fundo semitransparente */
+    text-shadow: 2px 2px 6px rgb(0, 0, 0);
+  }
+  /* Animação do planeta */
+  .planeta {
+    width: 800px;
+    height: 800px;
+    background-image: url('/assets/planeta.svg');
+    background-size: cover;
+    border-radius: 50%;
+    position: absolute;
+    bottom: -550px; /* Ajuste a posição para expor a parte superior do planeta */
+    z-index: 1; /* Posiciona o planeta atrás do conteúdo */
+    animation: spin 60s linear infinite;
+  }
+  /* Definindo a animação para girar */
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
