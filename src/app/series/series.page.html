@@ -4,10 +4,26 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">series</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-list *ngIf="series.length; else loading">
+    <ion-card *ngFor="let serie of series">
+      <img [src]="serie.image || 'assets/default-image.jpg'" alt="{{ serie.name }}" />
+      <ion-card-header>
+        <ion-card-title>{{ serie.name }}</ion-card-title>
+        <ion-card-subtitle>Lançamento: {{ serie.releaseDate }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Gêneros:</strong> {{ serie.genres }}</p>
+        <p><strong>Descrição:</strong> {{ serie.overview }}</p>
+        <ion-button fill="outline" [href]="serie.url" target="_blank">
+          Ver mais detalhes
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+  <ng-template #loading>
+    <ion-spinner></ion-spinner>
+    <p>Carregando informações...</p>
+  </ng-template>
 </ion-content>

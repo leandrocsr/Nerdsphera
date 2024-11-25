@@ -1,64 +1,44 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TabsPage } from '../tabs/tabs.page';
+import { TabsPage } from './tabs.page';
 
 const routes: Routes = [
   {
-    path: 'tabs',
+    path: '',
     component: TabsPage,
     children: [
       {
         path: 'noticias',
-        children: [
-          {
-            path: '',
-            loadChildren: () => import('../noticias/noticias.module').then(m => m.NoticiasPageModule)
-          }
-        ]
+        loadChildren: () =>
+          import('../noticias/noticias.module').then(m => m.NoticiasPageModule),
       },
       {
         path: 'filmes',
-        children: [
-          {
-            path: '',
-            loadChildren: () => import('../filmes/filmes.module').then(m => m.FilmesPageModule)
-          }
-        ]
+        loadChildren: () =>
+          import('../filmes/filmes.module').then(m => m.FilmesPageModule),
       },
       {
         path: 'series',
-        children: [
-          {
-            path: '',
-            loadChildren: () => import('../series/series.module').then(m => m.SeriesPageModule)
-          }
-        ]
+        loadChildren: () =>
+          import('../series/series.module').then(m => m.SeriesPageModule),
       },
       {
         path: 'jogos',
-        children: [
-          {
-            path: '',
-            loadChildren: () => import('../jogos/jogos.module').then(m => m.JogosPageModule)
-          }
-        ]
+        loadChildren: () =>
+          import('../jogos/jogos.module').then(m => m.JogosPageModule),
       },
       {
-        path: 'animacoes',
-        children: [
-          {
-            path: '',
-            loadChildren: () => import('../animacoes/animacoes.module').then(m => m.AnimacoesPageModule)
-          }
-        ]
+        path: '',
+        redirectTo: 'noticias', // Redireciona para 'noticias' ao acessar '/tabs'
+        pathMatch: 'full',
       },
-    ]
+    ],
   },
   {
     path: '',
-    redirectTo: '/tabs/noticias',
-    pathMatch: 'full'
-  }
+    redirectTo: '/tabs', // Redireciona para '/tabs' ao acessar a raiz
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({

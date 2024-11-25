@@ -1,36 +1,26 @@
-
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>notícias</ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
-  <ion-searchbar slot="fixed" placeholder="Buscar"></ion-searchbar>
+  <ion-list *ngIf="noticias.length; else loading">
+    <ion-card *ngFor="let noticia of noticias">
+      <img [src]="noticia.image" alt="{{ noticia.name }}" />
+      <ion-card-header>
+        <ion-card-title>{{ noticia.name }}</ion-card-title>
+        <ion-card-subtitle>Lançamento: {{ noticia.releaseDate }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Tipo:</strong> {{ noticia.type }}</p>
+        <p><strong>Categoria/Gênero:</strong> {{ noticia.genre }}</p>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
 
-  <ion-breadcrumbs>
-    <ion-breadcrumb>Início</ion-breadcrumb>
-    <ion-breadcrumb>Notícias</ion-breadcrumb>
-  </ion-breadcrumbs>
-
-  <ion-card>
-    <ion-img src="assets/news-image.jpg"></ion-img>
-    <ion-card-header>
-      <ion-card-subtitle>Séries, TV e Streaming</ion-card-subtitle>
-      <ion-card-title>2ª temporada de Round 6 ganha teaser com a volta de Gi-hun e...</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-item lines="none">
-        <ion-avatar slot="start">
-          <img src="assets/author-avatar.jpg" />
-        </ion-avatar>
-        <ion-label>
-          <h2>Camila Sousa</h2>
-          <p>19.set.24</p>
-        </ion-label>
-      </ion-item>
-    </ion-card-content>
-  </ion-card>
-  <ion-card>
-    <ion-card-content>
-      <div>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae dolorum voluptatibus maiores dolorem, illo vitae libero aut fuga qui necessitatibus sapiente vel, perferendis praesentium, voluptatum neque odit dolor debitis? Aspernatur provident consequuntur deserunt impedit accusamus enim doloremque, ipsam pariatur commodi quia dolorum quidem rerum architecto hic assumenda libero minima error maiores reprehenderit eveniet inventore consequatur beatae doloribus laboriosam. Ipsa, architecto sint! Dolorum debitis ratione corrupti iste eaque numquam officia dolores sit facere a ducimus odio, fugit beatae est, fugiat mollitia eos nulla pariatur libero deserunt vero aperiam culpa. Aliquam, magnam ipsa molestiae expedita nemo, voluptatem eaque pariatur maxime corporis neque animi rerum? Aperiam, quam sapiente veniam cumque iste laboriosam alias aliquid nostrum nesciunt, mollitia laborum, dolorem ipsum voluptatum enim ut itaque nobis quae. Incidunt expedita saepe cumque alias molestias officia, quibusdam odit voluptatum eum, error nam architecto, beatae suscipit ea. Voluptatum assumenda recusandae laudantium corporis eius ducimus, fugit reprehenderit. Saepe, id perspiciatis, laborum, illo nulla consequuntur doloremque error maxime ipsam dolore eveniet perferendis non veritatis totam eaque ducimus nobis rerum consectetur vitae. Recusandae quis voluptas numquam earum adipisci nam dolor vitae modi distinctio nulla. Quas animi, sed id ipsum alias cupiditate ad nam quisquam. Illum vero, accusamus exercitationem aliquam repellendus blanditiis similique sunt quibusdam, magnam non autem nemo expedita? Placeat, libero nihil ad, reprehenderit natus beatae reiciendis exercitationem ex eligendi blanditiis praesentium corporis est. Consequatur corrupti officiis ab, suscipit quaerat fugiat incidunt! Laborum hic ut sapiente corporis. Libero, ratione! Nemo in ratione iure eligendi? Distinctio cupiditate quasi porro obcaecati eligendi, minima sed illo quo quibusdam eaque dolores possimus iure officia, fuga ad quam quis corrupti eos dicta expedita. Quasi aut, veritatis repellendus aliquam odio porro itaque accusamus sed adipisci, pariatur a necessitatibus placeat in quod. Porro, voluptatibus mollitia quae unde, totam quas quibusdam ratione quia velit voluptatem odio, molestiae adipisci.</p>
-      </div>
-    </ion-card-content>
-  </ion-card>
+  <ng-template #loading>
+    <ion-spinner></ion-spinner>
+    <p>Carregando notícias...</p>
+  </ng-template>
 </ion-content>
