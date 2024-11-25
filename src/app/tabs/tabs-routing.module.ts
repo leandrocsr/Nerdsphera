@@ -39,6 +39,11 @@ const routes: Routes = [
     redirectTo: '/tabs', // Redireciona para '/tabs' ao acessar a raiz
     pathMatch: 'full',
   },
+  {
+    path: 'sobre',
+    loadChildren: () =>
+      import('../sobre/sobre.module').then(m => m.SobrePageModule),
+  },
 ];
 
 @NgModule({
