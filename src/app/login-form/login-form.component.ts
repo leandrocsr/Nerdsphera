@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController } from "@ionic/angular";
+import { AutenticacaoService } from '../servicos/auth.service';
+import { ToastController } from '@ionic/angular' ;
 
 
 @Component({
@@ -10,8 +12,34 @@ import { NavController } from "@ionic/angular";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginFormComponent  implements OnInit {
+  public email:string = "";
+  public senha:string = "";
+  public mensagem:string = "";
+  
+  constructor ( private authService : AutenticacaoService , private router: Router, private toastController : ToastController ) { }
 
-  constructor(private navController: NavController, private router: Router) { }
+
+  /* constructor(private navController: NavController, private router: Router) { } */
+
+  loginUsuario (){
+    this.authService.loginNoFirebase(this.email,
+    this.senha)
+    .then((res)=> {
+    console.log("res = ", res);
+    this.router.navigate(["/home"]);
+    }).catch((error)=>{
+    console.log("error = ", error);
+    this.mensagem = "Erro ao fazer login do usuário." ;
+    this.exibeMensagem ();
+    })
+    }
+    async exibeMensagem (){
+    const toast = await this.toastController .create({
+    message: this.mensagem,
+    duration: 2000
+    });
+    toast.present();
+  }
 
   login() {
     // Lógica de autenticação ou validação aqui (opcional)
@@ -20,8 +48,8 @@ export class LoginFormComponent  implements OnInit {
     this.router.navigateByUrl('/tabs/noticias');
   }
 
-  cadastrar() {
-    this.router.navigateByUrl('/cadastro');
+  cadastroPage (){
+    this.router.navigate(["/cadastro" ]);
   }
 
   ngOnInit() {}

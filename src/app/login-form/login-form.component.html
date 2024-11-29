@@ -1,24 +1,24 @@
-<div>
+<form>
   <h2>Login</h2>
   <ion-item>
-    <ion-label position="floating">E-mail ou nome de usuário</ion-label>
-    <ion-input type="text"></ion-input>
+    <ion-label position="floating">E-mail</ion-label>
+    <ion-input type="text" name="email" [(ngModel)] ="email"></ion-input>
   </ion-item>
 
   <ion-item>
     <ion-label position="floating">Senha</ion-label>
-    <ion-input type="password" clear-input="true"></ion-input>
+    <ion-input type="password" clear-input="true" name="senha" [(ngModel)] ="senha"></ion-input>
   </ion-item>
 
-  <ion-item lines="none">
+  <!-- <ion-item lines="none">
     <ion-checkbox slot="start"></ion-checkbox>
     <ion-label>Mantenha-me logado</ion-label>
-  </ion-item>
+  </ion-item> -->
 
-  <ion-button shape="round" expand="block" class="login-button" routerLink="/tabs">Login</ion-button>
+  <ion-button type="submit" shape="round" expand="block" class="login-button" routerLink="/tabs">Login</ion-button>
 
   <div class="links">
     <a href="#">Esqueceu a senha? <span>Clique aqui</span></a><br>
     <a href="" routerLink="/cadastro">Não possui login? <span>Cadastre-se aqui</span></a>
   </div>
-</div>
+</form>

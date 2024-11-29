@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from “@angular/fire/compat/auth”;
-@Injectable({
-providedIn: 'root'
-})
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+  signOut } from '@angular/fire/auth';
+
+@Injectable({providedIn: 'root'})
+
 export class AutenticacaoService {
-  constructor(public ngFireAuth: AngularFireAuth ) { }
-  loginNoFireBase(email, password){
-  return this.ngFireAuth.signInWithEmailAndPassword(email, password);
+  public userLogin:any = "Sem Usuário";
+  constructor ( private auth: Auth ) { }
+  async loginNoFirebase( email:string, password:string){
+  const user = await signInWithEmailAndPassword(this.auth, email, password );
+  this.userLogin = user;
+  return user;
   }
-  cadastroNoFirebase(email, password){
-  return this.ngFireAuth.createUserWithEmailAndPassword(email, password);
+  async cadastroNoFirebase( email:string, password:string ) {
+  const user = await createUserWithEmailAndPassword(this.auth, email, password );
+  return user;
   }
 }
