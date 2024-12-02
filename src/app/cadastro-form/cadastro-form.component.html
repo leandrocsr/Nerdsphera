@@ -1,4 +1,4 @@
-<form (ngSubmit)="cadastro()">
+<form (ngSubmit)="cadastro()" [formGroup] ="formGroup">
   <h2>Cadastro</h2>
   <!-- <ion-item>
     <ion-label position="floating">Nome de usuário</ion-label>
@@ -15,10 +15,10 @@
     <ion-input type="password" formControlName ="senha"></ion-input>
   </ion-item>
 
-  <ion-item lines="none">
+  <!-- <ion-item lines="none">
     <ion-checkbox slot="start"></ion-checkbox>
     <ion-label>Receber notificações</ion-label>
-  </ion-item>
+  </ion-item> -->
 
-  <ion-button expand="full" class="pronto-button" type="submit" routerLink="/login">Pronto!</ion-button>
+  <ion-button expand="full" shape="round" class="pronto-button" type="submit" routerLink="/login">Pronto!</ion-button>
 </form>

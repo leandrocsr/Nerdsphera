@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavController } from "@ionic/angular";
+
 import { AutenticacaoService } from '../servicos/auth.service';
 import { ToastController } from '@ionic/angular' ;
 
@@ -16,7 +16,10 @@ export class LoginFormComponent  implements OnInit {
   public senha:string = "";
   public mensagem:string = "";
   
-  constructor ( private authService : AutenticacaoService , private router: Router, private toastController : ToastController ) { }
+  constructor ( 
+    private authService : AutenticacaoService , 
+    private router: Router, 
+    private toastController : ToastController ) { }
 
 
   /* constructor(private navController: NavController, private router: Router) { } */
@@ -25,32 +28,29 @@ export class LoginFormComponent  implements OnInit {
     this.authService.loginNoFirebase(this.email,
     this.senha)
     .then((res)=> {
-    console.log("res = ", res);
-    this.router.navigate(["/home"]);
+      console.log("res = ", res);
+      this.router.navigate(["/tabs"]);
     }).catch((error)=>{
-    console.log("error = ", error);
-    this.mensagem = "Erro ao fazer login do usuário." ;
-    this.exibeMensagem ();
+      console.log("error = ", error);
+      this.mensagem = "Erro ao fazer login do usuário." ;
+      this.exibeMensagem ();
     })
-    }
-    async exibeMensagem (){
+  }
+  async exibeMensagem (){
     const toast = await this.toastController .create({
-    message: this.mensagem,
-    duration: 2000
+      message: this.mensagem,
+      duration: 2000
     });
     toast.present();
   }
 
-  login() {
-    // Lógica de autenticação ou validação aqui (opcional)
-
-    // Navega para a home page
+  /* login() {
     this.router.navigateByUrl('/tabs/noticias');
-  }
+  } */
 
-  cadastroPage (){
+  /* cadastroPage (){
     this.router.navigate(["/cadastro" ]);
-  }
+  } */
 
   ngOnInit() {}
 

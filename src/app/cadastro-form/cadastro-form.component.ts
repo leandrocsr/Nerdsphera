@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+
 import { FormControl, FormGroup, Validators} from "@angular/forms";
 import { of, throwError } from "rxjs";
+
 import { AutenticacaoService } from "../servicos/auth.service";
 import { Router } from "@angular/router";
 import { ToastController } from '@ionic/angular';
@@ -36,10 +38,13 @@ export class CadastroFormComponent  implements OnInit {
     }),
   });
 
-  constructor ( private authService: AutenticacaoService, private router: Router, private toastController: ToastController) {}
+  constructor ( 
+    private authService: AutenticacaoService, 
+    private router: Router, 
+    private toastController: ToastController) {}
   cadastro(){
     const { email, senha } = this.formGroup.value;
-    this.authService .cadastroNoFirebase (email, senha) .then((res:any)=> {
+    this.authService.cadastroNoFirebase (email, senha).then((res:any)=> {
       this.router.navigate(["/login"]);
     }).catch((error:any)=>{
       this.mensagem = "Erro ao incluir usuário." ;
@@ -47,10 +52,9 @@ export class CadastroFormComponent  implements OnInit {
     })
   }
   async exibeMensagem (){
-    const toast =
-    await this.toastController .create({
-    message: this.mensagem,
-    duration: 2000
+    const toast = await this.toastController .create({
+      message: this.mensagem,
+      duration: 2000
     });
     toast.present();
   }
