@@ -3,6 +3,9 @@ import { forkJoin } from 'rxjs';
 import { ServicoNoticiasService } from '../servicos/servicoNoticias/servico-noticias.service';
 import { FilmesService } from '../servicos/movieDB/filmes.service';
 import { SeriesService } from '../servicos/movieDB/series.service';
+import { NavController } from '@ionic/angular';
+import { InteracoesService } from '../servicos/interacoes.service';
+
 
 @Component({
   selector: 'app-noticias',
@@ -18,8 +21,25 @@ export class NoticiasPage implements OnInit {
   constructor(
     private servicoNoticias: ServicoNoticiasService,
     private filmesService: FilmesService,
-    private seriesService: SeriesService
+    private seriesService: SeriesService,
+    private navCtrl: NavController,
+    private interacoesService: InteracoesService
   ) {}
+
+  abrirDetalhes(noticia: any) {
+    this.interacoesService.saveNoticiaToFirestore(noticia)
+    .then(() => {
+      this.navCtrl.navigateForward(['tabs/noticia-detalhes', noticia.id]); // Navega para a página de detalhes
+    })
+    .catch((error) => {
+      console.error('Erro ao salvar a notícia no Firestore:', error);
+    });
+  }
+
+  /* openNoticiaDetalhes(noticia: any) {
+    console.log('Notícia selecionada:', noticia);
+    this.navCtrl.navigateForward(['tabs/noticia-detalhes', noticia.id]);
+  } */
 
   ngOnInit() {
     this.loadGenresAndNoticias();
@@ -36,6 +56,7 @@ export class NoticiasPage implements OnInit {
         this.genresFilmes = data.genresFilmes.genres || [];
         this.genresSeries = data.genresSeries.genres || [];
         this.noticias = data.noticias.map((item: any) => ({
+          id: item.id,
           name: item.name || item.title || 'Título não disponível',
           releaseDate: item.releaseDate
             ? this.formatDate(item.releaseDate)
@@ -93,4 +114,5 @@ export class NoticiasPage implements OnInit {
     const year = String(date.getFullYear()).slice(-2);
     return `${day}/${month}/${year}`;
   }
+  
 }

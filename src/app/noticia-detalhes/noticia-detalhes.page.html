@@ -1,0 +1,73 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Detalhes da Notícia</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/noticias"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Exibir erro, caso exista -->
+  <div *ngIf="error; else content">
+    <ion-card color="danger">
+      <ion-card-header>
+        <ion-card-title>Erro</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>{{ error }}</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <ng-template #content>
+    <ion-card *ngIf="noticia; else loading">
+      <img [src]="noticia.image" alt="{{ noticia.name }}" />
+      <ion-card-header>
+        <ion-card-title>{{ noticia.name }}</ion-card-title>
+        <ion-card-subtitle>Lançamento: {{ noticia.releaseDate }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Tipo:</strong> {{ noticia.type }}</p>
+        <p><strong>Categoria/Gênero:</strong> {{ noticia.genre }}</p>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Avaliação -->
+    <ion-item>
+      <ion-label>Avaliação</ion-label>
+      <div>
+        <ion-button *ngFor="let star of [1, 2, 3, 4, 5]" (click)="rateNoticia(star)">
+          <ion-icon [name]="star <= rating ? 'star' : 'star-outline'"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-item>
+
+    <!-- Lista de comentários -->
+    <ion-list>
+      <ion-item *ngFor="let comment of comments">
+        <ion-label>
+          <p>{{ comment.text }}</p>
+          <p>👍 {{ comment.likes || 0 }} 👎 {{ comment.dislikes || 0 }}</p>
+        </ion-label>
+        <ion-buttons slot="end">
+          <ion-button (click)="likeComment(comment)">👍</ion-button>
+          <ion-button (click)="dislikeComment(comment)">👎</ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-list>
+
+    <!-- Adicionar comentário -->
+    <ion-item>
+      <ion-input [(ngModel)]="newComment" placeholder="Adicionar comentário"></ion-input>
+      <ion-button (click)="submitComment()" expand="block" color="primary">Enviar</ion-button>
+    </ion-item>
+  </ng-template>
+
+  <!-- Template de carregamento -->
+  <ng-template #loading>
+    <ion-spinner></ion-spinner>
+    <p>Carregando...</p>
+  </ng-template>
+</ion-content>

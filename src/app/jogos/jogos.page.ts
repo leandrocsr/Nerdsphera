@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OpenCriticService } from '../servicos/openCritics/open-critic.service';
+import { NavController } from '@ionic/angular';
+import { InteracoesService } from '../servicos/interacoes.service';
 
 @Component({
   selector: 'app-jogos',
@@ -9,7 +11,21 @@ import { OpenCriticService } from '../servicos/openCritics/open-critic.service';
 export class JogosPage implements OnInit {
   games: any[] = [];
 
-  constructor(private openCriticService: OpenCriticService) {}
+  constructor(
+    private openCriticService: OpenCriticService, 
+    private navCtrl: NavController,
+    private interacoesService: InteracoesService
+  ) {}
+
+  abrirDetalhes(noticia: any) {
+    this.interacoesService.saveNoticiaToFirestore(noticia)
+    .then(() => {
+      this.navCtrl.navigateForward(['tabs/noticia-detalhes', noticia.id]); // Navega para a página de detalhes
+    })
+    .catch((error) => {
+      console.error('Erro ao salvar a notícia no Firestore:', error);
+    });
+  }
 
   ngOnInit() {
     this.loadGames();

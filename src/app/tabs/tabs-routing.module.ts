@@ -28,6 +28,11 @@ const routes: Routes = [
           import('../jogos/jogos.module').then(m => m.JogosPageModule),
       },
       {
+        path: 'noticia-detalhes/:id',
+        loadChildren: () => 
+          import('../noticia-detalhes/noticia-detalhes.module').then(m => m.NoticiaDetalhesPageModule)
+      },
+      {
         path: '',
         redirectTo: 'noticias', // Redireciona para 'noticias' ao acessar '/tabs'
         pathMatch: 'full',

@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SeriesService } from '../servicos/movieDB/series.service';
+import { NavController } from '@ionic/angular';
+import { InteracoesService } from '../servicos/interacoes.service';
+
 
 @Component({
   selector: 'app-series',
@@ -10,7 +13,21 @@ export class SeriesPage implements OnInit {
   series: any[] = [];
   genres: any[] = [];
 
-  constructor(private seriesService: SeriesService) {}
+  constructor(
+    private seriesService: SeriesService, 
+    private navCtrl: NavController,
+    private interacoesService: InteracoesService
+  ) {}
+
+  abrirDetalhes(noticia: any) {
+    this.interacoesService.saveNoticiaToFirestore(noticia)
+    .then(() => {
+      this.navCtrl.navigateForward(['tabs/noticia-detalhes', noticia.id]); // Navega para a página de detalhes
+    })
+    .catch((error) => {
+      console.error('Erro ao salvar a notícia no Firestore:', error);
+    });
+  }
 
   ngOnInit() {
     this.loadGenres();

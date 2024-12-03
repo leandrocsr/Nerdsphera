@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FilmesService } from '../servicos/movieDB/filmes.service';
+import { NavController } from '@ionic/angular';
+import { InteracoesService } from '../servicos/interacoes.service';
 
 @Component({
   selector: 'app-filmes',
@@ -10,7 +12,21 @@ export class FilmesPage implements OnInit {
   movies: any[] = []; // Armazena a lista de filmes
   genres: any[] = []; // Armazena a lista de gêneros
 
-  constructor(private filmesService: FilmesService) {}
+  constructor(
+    private filmesService: FilmesService, 
+    private navCtrl: NavController,
+    private interacoesService: InteracoesService
+  ) {}
+
+  abrirDetalhes(noticia: any) {
+    this.interacoesService.saveNoticiaToFirestore(noticia)
+    .then(() => {
+      this.navCtrl.navigateForward(['tabs/noticia-detalhes', noticia.id]); // Navega para a página de detalhes
+    })
+    .catch((error) => {
+      console.error('Erro ao salvar a notícia no Firestore:', error);
+    });
+  }
 
   ngOnInit() {
     this.loadGenresAndMovies();

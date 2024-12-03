@@ -27,6 +27,7 @@ export class ServicoNoticiasService {
         const combinedNews = [
           // Filmes
           ...data.movies.results.map((movie: any) => ({
+            id: movie.id,
             type: 'Movie',
             name: movie.title,
             releaseDate: movie.release_date,
@@ -37,6 +38,7 @@ export class ServicoNoticiasService {
           })),
           // Séries
           ...data.series.results.map((serie: any) => ({
+            id: serie.id,
             type: 'Serie',
             name: serie.name,
             releaseDate: serie.first_air_date,
@@ -47,6 +49,7 @@ export class ServicoNoticiasService {
           })),
           // Jogos
           ...data.games.map((game: any) => ({
+            id: game.id || game.slug,
             type: 'Game',
             name: game.name,
             releaseDate: game.firstReleaseDate,

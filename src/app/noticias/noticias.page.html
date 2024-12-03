@@ -6,7 +6,7 @@
 
 <ion-content>
   <ion-list *ngIf="noticias.length; else loading">
-    <ion-card *ngFor="let noticia of noticias">
+    <ion-card *ngFor="let noticia of noticias" (click)="abrirDetalhes(noticia)">
       <img [src]="noticia.image" alt="{{ noticia.name }}" />
       <ion-card-header>
         <ion-card-title>{{ noticia.name }}</ion-card-title>
