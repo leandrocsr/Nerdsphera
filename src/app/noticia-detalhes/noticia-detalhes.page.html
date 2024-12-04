@@ -1,9 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Detalhes da Notícia</ion-title>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/noticias"></ion-back-button>
-    </ion-buttons>
+    <ion-title>Detalhes</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -49,12 +46,13 @@
       <ion-item *ngFor="let comment of comments">
         <ion-label>
           <p>{{ comment.text }}</p>
-          <p>👍 {{ comment.likes || 0 }} 👎 {{ comment.dislikes || 0 }}</p>
+          <div class="like-dislike-container">
+            <ion-icon name="thumbs-up-outline" (click)="likeComment(comment)" class="icon-like"></ion-icon>
+            <span class="like-count">{{ comment.likes || 0 }}</span>
+            <ion-icon name="thumbs-down-outline" (click)="dislikeComment(comment)" class="icon-dislike"></ion-icon>
+            <span class="dislike-count">{{ comment.dislikes || 0 }}</span>
+          </div>
         </ion-label>
-        <ion-buttons slot="end">
-          <ion-button (click)="likeComment(comment)">👍</ion-button>
-          <ion-button (click)="dislikeComment(comment)">👎</ion-button>
-        </ion-buttons>
       </ion-item>
     </ion-list>
 
@@ -63,6 +61,13 @@
       <ion-input [(ngModel)]="newComment" placeholder="Adicionar comentário"></ion-input>
       <ion-button (click)="submitComment()" expand="block" color="primary">Enviar</ion-button>
     </ion-item>
+
+    <div class="back-button-container">
+      <ion-button fill="outline" color="medium" (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+        Voltar
+      </ion-button>
+    </div>
   </ng-template>
 
   <!-- Template de carregamento -->

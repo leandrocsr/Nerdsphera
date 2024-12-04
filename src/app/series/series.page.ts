@@ -19,14 +19,17 @@ export class SeriesPage implements OnInit {
     private interacoesService: InteracoesService
   ) {}
 
-  abrirDetalhes(noticia: any) {
-    this.interacoesService.saveNoticiaToFirestore(noticia)
-    .then(() => {
-      this.navCtrl.navigateForward(['tabs/noticia-detalhes', noticia.id]); // Navega para a página de detalhes
-    })
-    .catch((error) => {
-      console.error('Erro ao salvar a notícia no Firestore:', error);
-    });
+  abrirDetalhes(item: any, type: string) {
+    // Normalizar o formato do item para salvar no Firestore
+    const noticiaPadronizada = this.interacoesService.normalizeData(item, type);
+  
+    this.interacoesService.saveNoticiaToFirestore(noticiaPadronizada)
+      .then(() => {
+        this.navCtrl.navigateForward(['tabs/noticia-detalhes', noticiaPadronizada.id]); // Navega para detalhes
+      })
+      .catch((error) => {
+        console.error('Erro ao salvar a notícia no Firestore:', error);
+      });
   }
 
   ngOnInit() {

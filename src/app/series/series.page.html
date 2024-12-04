@@ -6,7 +6,7 @@
 
 <ion-content>
   <ion-list *ngIf="series.length; else loading">
-    <ion-card *ngFor="let serie of series" (click)="abrirDetalhes(serie)">
+    <ion-card *ngFor="let serie of series" (click)="abrirDetalhes(serie, 'Série')">
       <img [src]="serie.image || 'assets/default-image.jpg'" alt="{{ serie.name }}" />
       <ion-card-header>
         <ion-card-title>{{ serie.name }}</ion-card-title>

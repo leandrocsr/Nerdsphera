@@ -1,0 +1,39 @@
+.like-dislike-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+  
+    .icon-like,
+    .icon-dislike {
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--ion-color-medium);
+    }
+  
+    .icon-like:hover {
+      color: var(--ion-color-success);
+    }
+  
+    .icon-dislike:hover {
+      color: var(--ion-color-danger);
+    }
+  
+    .like-count,
+    .dislike-count {
+      font-size: 14px;
+      color: var(--ion-color-medium);
+    }
+  }
+  
+  .back-button-container {
+    text-align: center;
+    margin-top: 20px;
+  
+    ion-button {
+      --border-radius: 8px;
+      --padding-start: 12px;
+      --padding-end: 12px;
+    }
+  }
+  

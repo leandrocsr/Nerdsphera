@@ -11,6 +11,17 @@ export class InteracoesService {
 
   constructor(private firestore: Firestore) {}
 
+  normalizeData(item: any, type: string): any {
+    return {
+      id: item.id,
+      name: item.name || item.title || 'Título não disponível',
+      releaseDate: item.releaseDate || 'Data não disponível',
+      image: item.image || item.poster || 'assets/default-image.png',
+      type: type,
+      genre: item.genres || item.genre || 'Gênero não disponível',
+    };
+  }  
+
   saveNoticiaToFirestore(noticia: any): Promise<void> {
     const docRef = doc(this.firestore, `noticias/${noticia.id}`); // ID único baseado na notícia
     return setDoc(docRef, noticia); // Salva ou substitui a notícia no Firestore

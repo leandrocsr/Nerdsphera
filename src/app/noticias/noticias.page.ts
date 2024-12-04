@@ -75,9 +75,9 @@ export class NoticiasPage implements OnInit {
 
   // Obter os nomes dos gêneros
   getGenreNames(item: any): string {
-    if (item.type === 'Movie') {
+    if (item.type === 'Filme') {
       return this.getGenresNames(item.genre_ids, this.genresFilmes);
-    } else if (item.type === 'Serie') {
+    } else if (item.type === 'Série') {
       return this.getGenresNames(item.genre_ids, this.genresSeries);
     }
     return 'Gênero não disponível';

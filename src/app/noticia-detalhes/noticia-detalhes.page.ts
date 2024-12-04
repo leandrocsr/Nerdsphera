@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { InteracoesService } from '../servicos/interacoes.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-noticia-detalhes',
@@ -17,42 +18,38 @@ export class NoticiaDetalhesPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private interacoes: InteracoesService
+    private interacoes: InteracoesService,
+    private navCtrl: NavController
   ) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id'); // Obtém o ID da URL
     if (id) {
-      this.interacoes.getNoticiaById(id).subscribe((noticia) => {
-        this.noticia = noticia; // Carrega a notícia na variável local
-      });
+      this.loadNoticiaDetalhes(id); // Carregar detalhes da notícia e comentários
     } else {
-      console.error('ID da notícia não encontrado na URL.');
-      // Aqui você pode redirecionar ou exibir uma mensagem de erro, se necessário.
+      this.error = 'ID da notícia não encontrado.';
+      this.loading = false;
     }
   }
 
-  // Carregar detalhes da notícia
+  // Carregar detalhes da notícia e comentários
   loadNoticiaDetalhes(id: string) {
-    this.interacoes.getLatestNews().subscribe(
-      (noticias) => {
-        console.log('Respostas da API:', noticias);
-        this.noticia = noticias.find((noticia) => noticia.id === Number(id));
-        console.log('Notícia carregada:', this.noticia);
+    this.interacoes.getNoticiaById(id).subscribe(
+      (noticia) => {
+        this.noticia = noticia;
         if (this.noticia) {
+          this.rating = this.noticia.rating || 0; // Carrega avaliação, se houver
           this.loadComments(this.noticia.id);
         } else {
-          this.error = 'Detalhes da notícia não encontrados.';
-          this.loading = false;
+          this.error = 'Notícia não encontrada.';
         }
       },
       (err) => {
-        console.error('Erro ao carregar detalhes da notícia:', err);
-        this.error = 'Erro ao carregar os detalhes. Tente novamente mais tarde.';
-        this.loading = false;
+        console.error('Erro ao carregar a notícia:', err);
+        this.error = 'Erro ao carregar detalhes da notícia.';
       },
       () => {
-        this.loading = false; // Finalizar carregamento após a requisição
+        this.loading = false; // Finalizar carregamento
       }
     );
   }
@@ -65,16 +62,17 @@ export class NoticiaDetalhesPage implements OnInit {
       },
       (err) => {
         console.error('Erro ao carregar comentários:', err);
-        this.error = 'Erro ao carregar comentários. Tente novamente mais tarde.';
+        this.error = 'Erro ao carregar comentários.';
       }
     );
   }
 
   // Avaliar a notícia
   rateNoticia(newRating: number) {
+    if (!this.noticia) return;
     this.rating = newRating;
     this.interacoes.updateRating(this.noticia.id, this.rating).then(() => {
-      console.log('Avaliação salva!', this.rating);
+      console.log('Avaliação salva:', this.rating);
     });
   }
 
@@ -82,15 +80,15 @@ export class NoticiaDetalhesPage implements OnInit {
   submitComment() {
     if (this.newComment.trim() && this.noticia) {
       const comment = {
-        text: this.newComment,
+        text: this.newComment.trim(),
         likes: 0,
         dislikes: 0,
         createdAt: new Date().toISOString(),
       };
       this.interacoes.addComment(this.noticia.id, comment).then(() => {
-        this.newComment = '';
-        console.log('Comentário adicionado!');
-        this.loadComments(this.noticia.id); // Atualizar lista de comentários
+        this.newComment = ''; // Limpar campo de comentário
+        this.comments.push(comment); // Adicionar comentário localmente
+        console.log('Comentário adicionado:', comment);
       });
     }
   }
@@ -113,5 +111,9 @@ export class NoticiaDetalhesPage implements OnInit {
       .then(() => {
         comment.dislikes++;
       });
+  }
+
+  goBack() {
+    this.navCtrl.back(); // Retorna para a página anterior
   }
 }

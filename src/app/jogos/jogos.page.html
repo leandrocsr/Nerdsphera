@@ -6,7 +6,7 @@
 
 <ion-content>
   <ion-list *ngIf="games.length; else loading">
-    <ion-card *ngFor="let game of games" (click)="abrirDetalhes(game)">
+    <ion-card *ngFor="let game of games" (click)="abrirDetalhes(game, 'Jogo')">
       <img [src]="game.image || 'assets/default-image.jpg'" alt="{{ game.name }}" />
       <ion-card-header>
         <ion-card-title>{{ game.name }}</ion-card-title>
