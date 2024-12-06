@@ -32,12 +32,25 @@
     </ion-card>
 
     <!-- Avaliação -->
-    <ion-item>
-      <ion-label>Avaliação</ion-label>
-      <div>
-        <ion-button *ngFor="let star of [1, 2, 3, 4, 5]" (click)="rateNoticia(star)">
-          <ion-icon [name]="star <= rating ? 'star' : 'star-outline'"></ion-icon>
-        </ion-button>
+    <ion-item class="vote-container">
+      <div class="vote-buttons">
+        <ion-icon
+          name="heart-circle-outline"
+          [class.active-like]="userVote === 'like'"
+          (click)="likeNews()"
+          class="icon-like"
+        ></ion-icon>
+        <span>{{ likes }} Gostei!</span>
+      </div>
+    
+      <div class="vote-buttons">
+        <ion-icon
+          name="heart-dislike-circle-outline"
+          [class.active-dislike]="userVote === 'dislike'"
+          (click)="dislikeNews()"
+          class="icon-dislike"
+        ></ion-icon>
+        <span>{{ dislikes }} Não gostei</span>
       </div>
     </ion-item>
 
@@ -47,17 +60,31 @@
         <ion-label>
           <p>{{ comment.text }}</p>
           <div class="like-dislike-container">
-            <ion-icon name="thumbs-up-outline" (click)="likeComment(comment)" class="icon-like"></ion-icon>
+            <ion-icon 
+              name="thumbs-up-outline" 
+              [class.active-like]="comment.userVote === 'like'" 
+              (click)="likeComment(comment)" 
+              class="icon-like">
+            </ion-icon>
             <span class="like-count">{{ comment.likes || 0 }}</span>
-            <ion-icon name="thumbs-down-outline" (click)="dislikeComment(comment)" class="icon-dislike"></ion-icon>
+
+            <ion-icon
+              name="thumbs-down-outline"
+              [class.active-dislike]="comment.userVote === 'dislike'"
+              (click)="dislikeComment(comment)"
+              class="icon-dislike">
+            </ion-icon>
             <span class="dislike-count">{{ comment.dislikes || 0 }}</span>
           </div>
         </ion-label>
+        <ion-button slot="end" color="danger" (click)="deleteComment(comment)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
       </ion-item>
     </ion-list>
 
     <!-- Adicionar comentário -->
-    <ion-item>
+    <ion-item class="comment-input">
       <ion-input [(ngModel)]="newComment" placeholder="Adicionar comentário"></ion-input>
       <ion-button (click)="submitComment()" expand="block" color="primary">Enviar</ion-button>
     </ion-item>
