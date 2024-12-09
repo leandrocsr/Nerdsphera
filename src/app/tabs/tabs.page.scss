@@ -5,10 +5,16 @@
 }
 
 #logo {
-    height: 50px; 
-    margin: auto; 
-    margin-top: 10px;
-    display: block;
+    height: 50px;
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+ion-modal::part(backdrop) {
+  background: rgba(209, 213, 219, 0.8);
 }
 
 ion-toolbar {
@@ -18,4 +24,67 @@ ion-toolbar {
     --min-height: 30px;
     --padding-top: 5px;
     --padding-bottom: 5px;
+}
+
+.user-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza o ícone e o texto */
+  justify-content: center;
+  height: 100%; /* Garante que o container ocupe todo o espaço vertical */
+}
+
+.user-container ion-button {
+  --padding-start: 0; /* Remove espaçamento lateral */
+  --padding-end: 0;
+  --background: transparent; /* Mantém o botão transparente */
+  height: auto; /* Remove tamanho fixo */
+  min-height: 0; /* Permite ajustes menores */
+}
+
+.user-container ion-icon {
+  font-size: 28px; /* Ajusta o tamanho do ícone */
+  line-height: 1; /* Remove espaço extra ao redor */
+}
+
+.user-container span {
+  margin-top: -5px; /* Ajuste fino da posição do nome */
+  font-size: 12px; /* Ajuste do tamanho da fonte */
+}
+
+.nome-usuario {
+font-size: 10px;
+margin-top: 0px;
+color: #fff; /* Ajuste a cor conforme necessário */
+}
+
+.menu-flutuante {
+    position: absolute;
+    top: 66px; /* Alinha com a borda inferior do header */
+    right: 0;
+    width: 200px; /* Largura do menu */
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            &:hover {
+                background: #f0f0f0;
+            }
+        }
+    }
 }

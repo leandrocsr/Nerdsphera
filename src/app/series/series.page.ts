@@ -20,16 +20,8 @@ export class SeriesPage implements OnInit {
   ) {}
 
   abrirDetalhes(item: any, type: string) {
-    // Normalizar o formato do item para salvar no Firestore
-    const noticiaPadronizada = this.interacoesService.normalizeData(item, type);
-  
-    this.interacoesService.saveNoticiaToFirestore(noticiaPadronizada)
-      .then(() => {
-        this.navCtrl.navigateForward(['tabs/noticia-detalhes', noticiaPadronizada.id]); // Navega para detalhes
-      })
-      .catch((error) => {
-        console.error('Erro ao salvar a notícia no Firestore:', error);
-      });
+    // Navega para a página de detalhes com o ID da notícia
+    this.navCtrl.navigateForward(['tabs/noticia-detalhes', item.id]);
   }
 
   ngOnInit() {

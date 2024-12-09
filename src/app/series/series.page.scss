@@ -1,16 +1,19 @@
 ion-card img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin-bottom: 10px;
-  }
-  
-  ion-card-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  ion-card-content p {
-    margin: 5px 0;
-  }
-  
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+ion-card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+ion-card-content p {
+  margin: 5px 0;
+}
+
+ion-title {
+  font-weight: bold;
+}

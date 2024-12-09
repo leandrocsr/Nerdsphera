@@ -1,39 +1,98 @@
+.vote-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 15px 0;
+}
+
+.vote-buttons {
+  display: flex;
+  align-items: center;
+
+  ion-icon {
+    font-size: 50px;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .icon-like.active-like {
+    color: var(--ion-color-success);
+  }
+
+  .icon-dislike.active-dislike {
+    color: var(--ion-color-danger);
+  }
+
+  span {
+    font-size: 14px;
+    color: var(--ion-color-medium);
+  }
+}
+
+.vote-buttons:first-child {
+  margin-right: 30px; /* Ajuste esse valor para controlar o espaçamento entre os dois grupos */
+}
+
+
 .like-dislike-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 5px;
-  
-    .icon-like,
-    .icon-dislike {
-      font-size: 20px;
-      cursor: pointer;
-      color: var(--ion-color-medium);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+
+  .icon-like,
+  .icon-dislike {
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 50%; /* Deixa os ícones arredondados ao serem tocados */
+    background-color: var(--ion-color-light); /* Cor de fundo ao toque */
+    color: var(--ion-color-medium); /* Cor padrão */
+
+    transition: background-color 0.2s, color 0.2s; /* Transição suave */
+
+    &.active-like {
+      background-color: var(--ion-color-success); /* Cor ao curtir */
+      color: white;
     }
-  
-    .icon-like:hover {
-      color: var(--ion-color-success);
-    }
-  
-    .icon-dislike:hover {
-      color: var(--ion-color-danger);
-    }
-  
-    .like-count,
-    .dislike-count {
-      font-size: 14px;
-      color: var(--ion-color-medium);
-    }
-  }
-  
-  .back-button-container {
-    text-align: center;
-    margin-top: 20px;
-  
-    ion-button {
-      --border-radius: 8px;
-      --padding-start: 12px;
-      --padding-end: 12px;
+
+    &.active-dislike {
+      background-color: var(--ion-color-danger); /* Cor ao não curtir */
+      color: white;
     }
   }
+
+  .like-count,
+  .dislike-count {
+    font-size: 14px;
+    color: var(--ion-color-medium);
+  }
+}
+
+
+/* Adicionar comentário */
+.comment-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+
+  ion-input {
+    flex: 1;
+    --background: var(--ion-color-light);
+    --padding-start: 15px;
+    --padding-end: 15px;
+    border-radius: 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+}
+  
+.back-button-container {
+  text-align: center;
+  margin-top: 20px;
+
+  ion-button {
+    --border-radius: 8px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+  }
+}
   

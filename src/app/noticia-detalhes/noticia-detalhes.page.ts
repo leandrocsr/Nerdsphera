@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { InteracoesService } from '../servicos/interacoes.service';
 import { NavController } from '@ionic/angular';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-noticia-detalhes',
@@ -12,34 +13,41 @@ export class NoticiaDetalhesPage implements OnInit {
   noticia: any = null; // Detalhes da notícia
   comments: any[] = []; // Comentários da notícia
   newComment: string = ''; // Novo comentário
-  rating: number = 0; // Avaliação da notícia
   loading: boolean = true; // Estado de carregamento
   error: string | null = null; // Mensagem de erro, se houver
+  idNoticia: string | null = null;
+
+  likes: number = 0;
+  dislikes: number = 0;
+  userVote: 'like' | 'dislike' | null = null; // Para rastrear o voto do usuário
 
   constructor(
     private route: ActivatedRoute,
     private interacoes: InteracoesService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id'); // Obtém o ID da URL
-    if (id) {
-      this.loadNoticiaDetalhes(id); // Carregar detalhes da notícia e comentários
+    // Obtém o ID da notícia da rota
+    this.idNoticia = this.route.snapshot.paramMap.get('id');
+
+    if (this.idNoticia) {
+      this.loadNoticiaDetalhes(this.idNoticia);
     } else {
-      this.error = 'ID da notícia não encontrado.';
-      this.loading = false;
+      this.error = 'ID da notícia não fornecido.';
     }
   }
 
-  // Carregar detalhes da notícia e comentários
+  // Carregar detalhes da notícia e sincronizar a avaliação
   loadNoticiaDetalhes(id: string) {
     this.interacoes.getNoticiaById(id).subscribe(
       (noticia) => {
-        this.noticia = noticia;
-        if (this.noticia) {
-          this.rating = this.noticia.rating || 0; // Carrega avaliação, se houver
-          this.loadComments(this.noticia.id);
+        if (noticia) {
+          this.noticia = noticia;
+          this.likes = noticia.likes || 0;
+          this.dislikes = noticia.dislikes || 0;
+          this.loadComments(id);
         } else {
           this.error = 'Notícia não encontrada.';
         }
@@ -49,7 +57,7 @@ export class NoticiaDetalhesPage implements OnInit {
         this.error = 'Erro ao carregar detalhes da notícia.';
       },
       () => {
-        this.loading = false; // Finalizar carregamento
+        this.loading = false;
       }
     );
   }
@@ -58,7 +66,7 @@ export class NoticiaDetalhesPage implements OnInit {
   loadComments(noticiaId: string) {
     this.interacoes.getComments(noticiaId).subscribe(
       (comments) => {
-        this.comments = comments;
+        this.comments = comments || [];
       },
       (err) => {
         console.error('Erro ao carregar comentários:', err);
@@ -67,16 +75,7 @@ export class NoticiaDetalhesPage implements OnInit {
     );
   }
 
-  // Avaliar a notícia
-  rateNoticia(newRating: number) {
-    if (!this.noticia) return;
-    this.rating = newRating;
-    this.interacoes.updateRating(this.noticia.id, this.rating).then(() => {
-      console.log('Avaliação salva:', this.rating);
-    });
-  }
-
-  // Adicionar novo comentário
+  // Adicionar um novo comentário
   submitComment() {
     if (this.newComment.trim() && this.noticia) {
       const comment = {
@@ -84,36 +83,75 @@ export class NoticiaDetalhesPage implements OnInit {
         likes: 0,
         dislikes: 0,
         createdAt: new Date().toISOString(),
+        /* userId: this.interacoes.getUserId(), // Adicionar ID do usuário */
       };
-      this.interacoes.addComment(this.noticia.id, comment).then(() => {
-        this.newComment = ''; // Limpar campo de comentário
-        this.comments.push(comment); // Adicionar comentário localmente
-        console.log('Comentário adicionado:', comment);
+
+      this.interacoes.addComment(this.noticia.id, comment).then((docRef) => {
+        this.comments.push({ id: docRef.id, ...comment });
+        this.newComment = '';
+        this.cdr.detectChanges();
       });
     }
   }
 
-  // Curtir um comentário
-  likeComment(comment: any) {
-    if (!this.noticia) return;
-    this.interacoes
-      .updateCommentVotes(this.noticia.id, comment.id, (comment.likes || 0) + 1, comment.dislikes)
-      .then(() => {
-        comment.likes++;
-      });
+  // Votar na notícia (Gostei! / Não gostei!)
+  likeNews() {
+    if (this.userVote === 'like') {
+      this.likes--;
+      this.userVote = null;
+    } else {
+      if (this.userVote === 'dislike') {
+        this.dislikes--;
+      }
+      this.likes++;
+      this.userVote = 'like';
+    }
+    this.updateNewsVotes();
   }
 
-  // Não curtir um comentário
-  dislikeComment(comment: any) {
-    if (!this.noticia) return;
-    this.interacoes
-      .updateCommentVotes(this.noticia.id, comment.id, comment.likes, (comment.dislikes || 0) + 1)
-      .then(() => {
-        comment.dislikes++;
+  dislikeNews() {
+    if (this.userVote === 'dislike') {
+      this.dislikes--;
+      this.userVote = null;
+    } else {
+      if (this.userVote === 'like') {
+        this.likes--;
+      }
+      this.dislikes++;
+      this.userVote = 'dislike';
+    }
+    this.updateNewsVotes();
+  }
+
+  likeComment(comment: string) {
+
+  }
+
+  dislikeComment(comment: string) {
+    
+  }
+
+  // Atualizar votos da notícia no Firestore
+  updateNewsVotes() {
+    if (this.noticia) {
+      this.interacoes.updateNewsLikesDislikes(this.noticia.id, {
+        likes: this.likes,
+        dislikes: this.dislikes,
       });
+    }
+  }
+
+  // Excluir comentário
+  deleteComment(comment: any) {
+    if (this.noticia && comment.id) {
+      this.interacoes.deleteComment(this.noticia.id, comment.id).then(() => {
+        this.comments = this.comments.filter((c) => c.id !== comment.id);
+      });
+    }
   }
 
   goBack() {
     this.navCtrl.back(); // Retorna para a página anterior
   }
 }
+
