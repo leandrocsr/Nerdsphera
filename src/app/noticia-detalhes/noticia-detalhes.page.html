@@ -19,18 +19,35 @@
 
   <!-- Conteúdo principal -->
   <ng-template #content>
-    <ion-card *ngIf="noticia; else loading">
-      <img [src]="noticia.image" alt="{{ noticia.name }}" />
-      <ion-card-header>
-        <ion-card-title>{{ noticia.name }}</ion-card-title>
-        <ion-card-subtitle>Lançamento: {{ noticia.releaseDate }}</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <p><strong>Tipo:</strong> {{ noticia.type }}</p>
-        <p><strong>Categoria/Gênero:</strong> {{ noticia.genre }}</p>
-      </ion-card-content>
-    </ion-card>
-
+    <div *ngIf="detalhes && (detalhes.type === 'Movie' || detalhes.type === 'Serie')">
+      <ion-card>
+        <img [src]="detalhes.image" alt="{{ detalhes.name}}" />
+        <ion-card-header>
+          <ion-card-title>{{ detalhes.name }}</ion-card-title>
+          <ion-card-subtitle>Lançamento: {{ detalhes.releaseDate }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <p><strong>Resumo:</strong> {{ detalhes.overview }}</p>
+          <p><strong>Tipo:</strong> {{ detalhes.type }}</p>
+          <p><strong>Categoria/Gênero:</strong> {{ detalhes.genre }}</p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    <div *ngIf="detalhes && detalhes.type === 'Game'">
+      <ion-card>
+        <img [src]="detalhes.image || 'assets/default-image.jpg'" alt="{{ detalhes.name }}" />
+        <ion-card-header>
+          <ion-card-title>{{ detalhes.name }}</ion-card-title>
+          <ion-card-subtitle>Lançamento: {{ detalhes.releaseDate }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <p><strong>Plataformas:</strong> {{ detalhes.platforms }}</p>
+          <p><strong>Pontuação:</strong> {{ detalhes.score }}</p>
+          <p><strong>Número de Análises:</strong> {{ detalhes.numReviews }}</p>
+          <p><strong>Tags:</strong> {{ detalhes.tags }}</p>
+        </ion-card-content>
+      </ion-card>
+    </div>
     <!-- Avaliação -->
     <ion-item class="vote-container">
       <div class="vote-buttons">
@@ -54,41 +71,43 @@
       </div>
     </ion-item>
 
-    <!-- Lista de comentários -->
-    <ion-list>
-      <ion-item *ngFor="let comment of comments">
-        <ion-label>
-          <p>{{ comment.text }}</p>
-          <div class="like-dislike-container">
-            <ion-icon 
-              name="thumbs-up-outline" 
-              [class.active-like]="comment.userVote === 'like'" 
-              (click)="likeComment(comment)" 
-              class="icon-like">
-            </ion-icon>
-            <span class="like-count">{{ comment.likes || 0 }}</span>
-
-            <ion-icon
-              name="thumbs-down-outline"
-              [class.active-dislike]="comment.userVote === 'dislike'"
-              (click)="dislikeComment(comment)"
-              class="icon-dislike">
-            </ion-icon>
-            <span class="dislike-count">{{ comment.dislikes || 0 }}</span>
-          </div>
-        </ion-label>
-        <ion-button slot="end" color="danger" (click)="deleteComment(comment)">
-          <ion-icon name="trash-outline"></ion-icon>
-        </ion-button>
-      </ion-item>
-    </ion-list>
-
     <!-- Adicionar comentário -->
     <ion-item class="comment-input">
       <ion-input [(ngModel)]="newComment" placeholder="Adicionar comentário"></ion-input>
       <ion-button (click)="submitComment()" expand="block" color="primary">Enviar</ion-button>
     </ion-item>
 
+    <!-- Lista de comentários -->
+    <ion-list>
+      <ion-item *ngFor="let comment of (comments$ | async)">
+        <ion-label>
+          <h3>{{ comment.userName }}</h3>
+          <p>{{ comment.comment }}</p>
+          <small>{{ comment.createdAt?.toDate() | date: 'short' }}</small>
+          <small *ngIf="comment.authorUid === currentUserUid"> (Você)</small>
+          <div class="like-dislike-container">
+            <ion-icon 
+              name="thumbs-up-outline" 
+              [class.active-like]="comment.userVote === 'like'" 
+              (click)="likeComment(comment.id)" 
+              class="icon-like">
+            </ion-icon>
+            <span class="like-count">{{ comment.likesCount || 0 }}</span>
+
+            <ion-icon
+              name="thumbs-down-outline"
+              [class.active-dislike]="comment.userVote === 'dislike'"
+              (click)="dislikeComment(comment.id)"
+              class="icon-dislike">
+            </ion-icon>
+            <span class="dislike-count">{{ comment.dislikesCount || 0 }}</span>
+          </div>
+        </ion-label>
+        <ion-button slot="end" color="danger" *ngIf="comment.authorUid === currentUserUid" (click)="deleteComment(noticiaId, comment)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
     <div class="back-button-container">
       <ion-button fill="outline" color="medium" (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -97,7 +116,7 @@
     </div>
   </ng-template>
 
-  <!-- Template de carregamento -->
+  <!-- Template de carredetalhesnto -->
   <ng-template #loading>
     <ion-spinner></ion-spinner>
     <p>Carregando...</p>

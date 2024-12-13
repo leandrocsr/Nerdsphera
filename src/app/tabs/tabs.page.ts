@@ -24,9 +24,12 @@ export class TabsPage implements OnInit {
 
 
 
-  abrirMenu(event: Event) {
-    event.stopPropagation();
-    this.menuAberto = true;
+  abrirMenu() {
+    if(this.menuAberto == false) {
+      this.menuAberto = true;
+    } else {
+      this.fecharMenu()
+    }
   }
 
   fecharMenu() {

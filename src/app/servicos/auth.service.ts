@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, getDoc, collection } from '@angular/fire/firestore';
-/* import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage'; */
 
 @Injectable({ providedIn: 'root' })
 export class AutenticacaoService {
@@ -72,7 +71,6 @@ export class AutenticacaoService {
       uid: user.uid,
       email: user.email,
       nome: "Novo Usuário", // Você pode solicitar o nome no cadastro
-      /* fotoPerfil: "",       // Você pode adicionar uma foto padrão ou deixar vazio */
     };
 
     await setDoc(userDoc, userData);
@@ -97,16 +95,10 @@ export class AutenticacaoService {
       throw new Error("Usuário não encontrado.");
     }
   }
-
-  // Upload da foto de perfil para o Firebase Storage
-  /* uploadFotoPerfil(foto: File, userId: string): Promise<string> {
-    const fotoRef = ref(this.storage, `usuarios/${userId}/fotoPerfil.jpg`);
-    return uploadBytes(fotoRef, foto).then(() => getDownloadURL(fotoRef));
-  } */
 }
 
 export interface Usuario {
   nome: string;
   email: string;
-  fotoPerfil?: string; // Opcional, para incluir futuramente.
+  uId: string;
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SeriesService } from '../servicos/movieDB/series.service';
 import { NavController } from '@ionic/angular';
 import { InteracoesService } from '../servicos/interacoes.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -16,12 +17,28 @@ export class SeriesPage implements OnInit {
   constructor(
     private seriesService: SeriesService, 
     private navCtrl: NavController,
-    private interacoesService: InteracoesService
+    private interacoesService: InteracoesService,
+    private router: Router
   ) {}
 
-  abrirDetalhes(item: any, type: string) {
-    // Navega para a página de detalhes com o ID da notícia
-    this.navCtrl.navigateForward(['tabs/noticia-detalhes', item.id]);
+  abrirDetalhes(serie: any) {
+    const detalhes = {
+      type: serie.type || 'Tipo não disponível',
+      id: serie.id,
+      name: serie.name || serie.title || 'Título não disponível',
+      overview: serie.overview || 'Resumo não disponível',
+      releaseDate: serie.releaseDate
+        ? this.formatDate(serie.releaseDate)
+        : 'Data não disponível',
+      genre: this.getGenresNames(serie),
+      image: serie.poster_path
+        ? `https://image.tmdb.org/t/p/w500${serie.poster_path}`
+        : 'assets/default-image.jpg',
+      url: `https://www.themoviedb.org/tv/${serie.id}`,
+    };
+  
+    // Navegar para a página de detalhes e passar os dados
+    this.router.navigate(['/tabs/noticia-detalhes/${detalhes.id}'], { state: { data: detalhes } });
   }
 
   ngOnInit() {
@@ -75,5 +92,14 @@ export class SeriesPage implements OnInit {
       .join(', ');
 
     return genreNames || 'Sem gênero';
+  }
+
+  // Formatar a data no formato "dd/mm/aa"
+  private formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
+    return `${day}/${month}/${year}`;
   }
 }

@@ -30,6 +30,7 @@ export class ServicoNoticiasService {
             id: movie.id,
             type: 'Movie',
             name: movie.title,
+            overview: movie.overview,
             releaseDate: movie.release_date,
             image: movie.poster_path
               ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
@@ -41,6 +42,7 @@ export class ServicoNoticiasService {
             id: serie.id,
             type: 'Serie',
             name: serie.name,
+            overview: serie.overview,
             releaseDate: serie.first_air_date,
             image: serie.poster_path
               ? `https://image.tmdb.org/t/p/w500${serie.poster_path}`

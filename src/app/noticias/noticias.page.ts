@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
+import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { ServicoNoticiasService } from '../servicos/servicoNoticias/servico-noticias.service';
 import { FilmesService } from '../servicos/movieDB/filmes.service';
@@ -18,27 +19,45 @@ export class NoticiasPage implements OnInit {
   genresFilmes: any[] = [];
   genresSeries: any[] = [];
 
+  
+
   constructor(
     private servicoNoticias: ServicoNoticiasService,
     private filmesService: FilmesService,
     private seriesService: SeriesService,
     private navCtrl: NavController,
-    private interacoesService: InteracoesService
+    private interacoesService: InteracoesService,
+    private router: Router
   ) {}
 
-  abrirDetalhes(noticia: any) {
-    this.interacoesService.saveNoticiaToFirestore(noticia)
-    .then(() => {
-      this.navCtrl.navigateForward(['tabs/noticia-detalhes', noticia.id]); // Navega para a página de detalhes
-    })
-    .catch((error) => {
-      console.error('Erro ao salvar a notícia no Firestore:', error);
-    });
+  abrirDetalhes(item: any) {
+    const detalhes = {
+      type: item.type || 'Tipo não disponível',
+      id: item.id,
+      name: item.name || item.title || 'Título não disponível',
+      overview: item.overview || 'Resumo não disponível',
+      releaseDate: item.releaseDate
+        ? this.formatDate(item.releaseDate)
+        : 'Data não disponível',
+      genre: this.getGenreNames(item),
+      image: this.getImageUrl(item),
+    };
+  
+    // Navegar para a página de detalhes e passar os dados
+    this.router.navigate(['/tabs/noticia-detalhes/${detalhes.id}'], { state: { data: detalhes } });
   }
 
-  /* openNoticiaDetalhes(noticia: any) {
-    console.log('Notícia selecionada:', noticia);
-    this.navCtrl.navigateForward(['tabs/noticia-detalhes', noticia.id]);
+  /* abrirDetalhes(item: any, type: string) {
+    // Normalizar o formato do item para enviar à página de detalhes
+    const noticiaPadronizada = this.interacoesService.normalizeData(item, type);
+    this.interacoesService.setTempNoticia(noticiaPadronizada);
+    console.log(noticiaPadronizada);
+    if (noticiaPadronizada.id) {
+      // Navegar para a página de detalhes com o ID da notícia
+      this.navCtrl.navigateForward(`/tabs/noticia-detalhes/${noticiaPadronizada.id}`);
+    } else {
+      console.error('Erro: ID da notícia não definido após a normalização.');
+    }
   } */
 
   ngOnInit() {
@@ -58,6 +77,7 @@ export class NoticiasPage implements OnInit {
         this.noticias = data.noticias.map((item: any) => ({
           id: item.id,
           name: item.name || item.title || 'Título não disponível',
+          overview: item.overview || 'Resumo não disponível',
           releaseDate: item.releaseDate
             ? this.formatDate(item.releaseDate)
             : 'Data não disponível',
@@ -72,6 +92,8 @@ export class NoticiasPage implements OnInit {
       }
     });
   }
+
+
 
   // Obter os nomes dos gêneros
   getGenreNames(item: any): string {

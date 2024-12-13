@@ -34,6 +34,7 @@ export class OpenCriticService {
         image: this.getGameImage(game.images), // Lógica para selecionar a imagem correta
         platforms: game.Platforms?.map((platform: any) => platform.name) || [],
         tags: game.tags?.map((tag: any) => tag.name) || [],
+        type: 'Game',
       }));
     } catch (error) {
       console.error('Error fetching data:', error);

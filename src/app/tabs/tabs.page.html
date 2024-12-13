@@ -1,4 +1,4 @@
-<ion-header (click)="fecharMenu()">
+<ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button style="opacity: 0; pointer-events: none;">
@@ -10,7 +10,7 @@
 
     <ion-buttons slot="end">
       <div class="user-container">
-        <ion-button expand="full" (click)="abrirMenu($event)">
+        <ion-button expand="full" (click)="abrirMenu()">
           <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
         </ion-button>
         <span class="nome-usuario">{{ nomeUsuario }}</span>
@@ -19,7 +19,9 @@
   </ion-toolbar>
 </ion-header>
 
-<div *ngIf="menuAberto" (click)="$event.stopPropagation()" class="menu-flutuante">
+<div *ngIf="menuAberto" class="backdrop" (click)="fecharMenu()"></div>
+
+<div *ngIf="menuAberto" class="menu-flutuante">
   <ul>
     <li (click)="irPara('sobre')">Perfil</li>
     <li (click)="irPara('sobre')">Configurações</li>

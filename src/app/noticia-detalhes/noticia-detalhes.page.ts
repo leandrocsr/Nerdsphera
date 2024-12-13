@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { InteracoesService } from '../servicos/interacoes.service';
-import { NavController } from '@ionic/angular';
-import { ChangeDetectorRef } from '@angular/core';
+import { NavController, ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { AutenticacaoService } from '../servicos/auth.service';
 
 @Component({
   selector: 'app-noticia-detalhes',
@@ -10,148 +12,162 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./noticia-detalhes.page.scss'],
 })
 export class NoticiaDetalhesPage implements OnInit {
-  noticia: any = null; // Detalhes da notícia
-  comments: any[] = []; // Comentários da notícia
+  comments$: Observable<any[]> | null = null;
   newComment: string = ''; // Novo comentário
   loading: boolean = true; // Estado de carregamento
   error: string | null = null; // Mensagem de erro, se houver
-  idNoticia: string | null = null;
+  noticiaId: string = '';
 
   likes: number = 0;
   dislikes: number = 0;
   userVote: 'like' | 'dislike' | null = null; // Para rastrear o voto do usuário
 
+  detalhes: any = {};
+
+  private toast: string = '';
+
   constructor(
     private route: ActivatedRoute,
-    private interacoes: InteracoesService,
+    private interacoesService: InteracoesService,
     private navCtrl: NavController,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router,
+    private autenticacaoService: AutenticacaoService,
+    private toastController: ToastController
   ) {}
 
   ngOnInit() {
-    // Obtém o ID da notícia da rota
-    this.idNoticia = this.route.snapshot.paramMap.get('id');
+    // Recuperar os dados do estado
+    this.detalhes = history.state.data;
+    this.noticiaId = this.detalhes.id;
 
-    if (this.idNoticia) {
-      this.loadNoticiaDetalhes(this.idNoticia);
-    } else {
-      this.error = 'ID da notícia não fornecido.';
+    if (!this.detalhes) {
+      // Caso os dados não estejam disponíveis, você pode redirecionar ou exibir uma mensagem de erro
+      console.error('Nenhum dado foi encontrado!');
+    }
+    this.loadComments();
+    this.updateLikesAndDislikes();
+  }
+
+  async submitComment() {
+    if (!this.newComment.trim()) {
+      this.error = 'O comentário não pode estar vazio.';
+      return;
+    }
+
+    try {
+      // Envia o comentário utilizando o InteracoesService
+      await this.interacoesService.addComment(this.noticiaId!, this.newComment);
+
+      // Atualiza a lista de comentários
+      this.loadComments();
+
+      // Limpa o campo de comentário
+      this.newComment = '';
+    } catch (error) {
+      this.error = 'Erro ao enviar o comentário. Tente novamente.';
+      console.error(error);
     }
   }
 
-  // Carregar detalhes da notícia e sincronizar a avaliação
-  loadNoticiaDetalhes(id: string) {
-    this.interacoes.getNoticiaById(id).subscribe(
-      (noticia) => {
+  async loadComments() {
+    if (!this.noticiaId) return;
+  
+    try {
+      this.comments$ = await this.interacoesService.getComments(this.noticiaId);
+    } catch (error) {
+      console.error('Erro ao carregar comentários:', error);
+    }
+  }
+
+  likeNews() {
+  this.interacoesService.addLikeOrDislike(this.noticiaId, 'like')
+    .then(() => {
+      console.log('Voto de like registrado com sucesso.');
+      this.updateLikesAndDislikes(); // Atualiza os likes e dislikes
+    })
+    .catch(error => {
+      console.error('Erro ao registrar o like:', error);
+    });
+}
+
+dislikeNews() {
+  this.interacoesService.addLikeOrDislike(this.noticiaId, 'dislike')
+    .then(() => {
+      console.log('Voto de dislike registrado com sucesso.');
+      this.updateLikesAndDislikes(); // Atualiza os likes e dislikes
+    })
+    .catch(error => {
+      console.error('Erro ao registrar o dislike:', error);
+    });
+}
+
+  async updateLikesAndDislikes() {
+    this.interacoesService.getNoticiaById(this.noticiaId);
+      /* (noticia) => {
         if (noticia) {
-          this.noticia = noticia;
           this.likes = noticia.likes || 0;
           this.dislikes = noticia.dislikes || 0;
-          this.loadComments(id);
-        } else {
-          this.error = 'Notícia não encontrada.';
+          this.cdr.detectChanges(); // Força a atualização do template
         }
       },
-      (err) => {
-        console.error('Erro ao carregar a notícia:', err);
-        this.error = 'Erro ao carregar detalhes da notícia.';
-      },
-      () => {
-        this.loading = false;
+      (error) => {
+        console.error('Erro ao atualizar likes e dislikes:', error);
       }
-    );
+    ); */
   }
 
-  // Carregar comentários da notícia
-  loadComments(noticiaId: string) {
-    this.interacoes.getComments(noticiaId).subscribe(
-      (comments) => {
-        this.comments = comments || [];
-      },
-      (err) => {
-        console.error('Erro ao carregar comentários:', err);
-        this.error = 'Erro ao carregar comentários.';
-      }
-    );
+  likeComment(commentId: string) {
+    this.interacoesService.addLikeOrDislikeToComment(this.noticiaId, commentId, 'like')
+      .then(() => console.log('Like adicionado ao comentário.'))
+      .catch(error => console.error('Erro ao dar like no comentário:', error));
+  }
+  
+  dislikeComment(commentId: string) {
+    this.interacoesService.addLikeOrDislikeToComment(this.noticiaId, commentId, 'dislike')
+      .then(() => console.log('Dislike adicionado ao comentário.'))
+      .catch(error => console.error('Erro ao dar dislike no comentário:', error));
   }
 
-  // Adicionar um novo comentário
-  submitComment() {
-    if (this.newComment.trim() && this.noticia) {
-      const comment = {
-        text: this.newComment.trim(),
-        likes: 0,
-        dislikes: 0,
-        createdAt: new Date().toISOString(),
-        /* userId: this.interacoes.getUserId(), // Adicionar ID do usuário */
-      };
 
-      this.interacoes.addComment(this.noticia.id, comment).then((docRef) => {
-        this.comments.push({ id: docRef.id, ...comment });
-        this.newComment = '';
-        this.cdr.detectChanges();
-      });
+  async refreshComments() {
+    this.comments$ = this.interacoesService.getComments(this.noticiaId); // Atualiza o observable de comentários
+  }
+  
+  async deleteComment(noticiaId: string, comment: any): Promise<void> {
+    if (comment.authorUid !== this.currentUserUid) {
+      this.toast = 'Você não tem permissão para deletar este comentário.';
+      this.exibeToast();
+      return;
+    }
+  
+    try {
+      await this.interacoesService.deleteComment(noticiaId, comment.id);
+      this.toast = 'Comentário excluido.';
+      this.exibeToast();
+      // Atualize a lista de comentários após a exclusão
+      this.loadComments();
+    } catch (error) {
+      console.error('Erro ao deletar comentário:', error);
+      this.toast = 'Erro ao deletar o comentário. Tente novamente.';
+      this.exibeToast();
     }
   }
 
-  // Votar na notícia (Gostei! / Não gostei!)
-  likeNews() {
-    if (this.userVote === 'like') {
-      this.likes--;
-      this.userVote = null;
-    } else {
-      if (this.userVote === 'dislike') {
-        this.dislikes--;
-      }
-      this.likes++;
-      this.userVote = 'like';
-    }
-    this.updateNewsVotes();
-  }
-
-  dislikeNews() {
-    if (this.userVote === 'dislike') {
-      this.dislikes--;
-      this.userVote = null;
-    } else {
-      if (this.userVote === 'like') {
-        this.likes--;
-      }
-      this.dislikes++;
-      this.userVote = 'dislike';
-    }
-    this.updateNewsVotes();
-  }
-
-  likeComment(comment: string) {
-
-  }
-
-  dislikeComment(comment: string) {
-    
-  }
-
-  // Atualizar votos da notícia no Firestore
-  updateNewsVotes() {
-    if (this.noticia) {
-      this.interacoes.updateNewsLikesDislikes(this.noticia.id, {
-        likes: this.likes,
-        dislikes: this.dislikes,
-      });
-    }
-  }
-
-  // Excluir comentário
-  deleteComment(comment: any) {
-    if (this.noticia && comment.id) {
-      this.interacoes.deleteComment(this.noticia.id, comment.id).then(() => {
-        this.comments = this.comments.filter((c) => c.id !== comment.id);
-      });
-    }
+  get currentUserUid(): string | null {
+    const user = this.autenticacaoService.getUsuarioLogado();
+    return user ? user.uId : null;
   }
 
   goBack() {
     this.navCtrl.back(); // Retorna para a página anterior
   }
-}
 
+  async exibeToast() {
+    const toast = await this.toastController.create({
+      message: this.toast,
+      duration: 2000,
+    });
+    toast.present();
+  }
+}

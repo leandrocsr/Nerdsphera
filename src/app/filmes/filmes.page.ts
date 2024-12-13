@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FilmesService } from '../servicos/movieDB/filmes.service';
 import { NavController } from '@ionic/angular';
 import { InteracoesService } from '../servicos/interacoes.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-filmes',
@@ -15,20 +17,27 @@ export class FilmesPage implements OnInit {
   constructor(
     private filmesService: FilmesService, 
     private navCtrl: NavController,
-    private interacoesService: InteracoesService
+    private interacoesService: InteracoesService,
+    private router: Router
   ) {}
 
-  abrirDetalhes(item: any, type: string) {
-    // Normalizar o formato do item para salvar no Firestore
-    const noticiaPadronizada = this.interacoesService.normalizeData(item, type);
+  abrirDetalhes(movie: any) {
+    const detalhes = {
+      type: movie.type || 'Tipo não disponível',
+      id: movie.id,
+      name: movie.name || movie.title || 'Título não disponível',
+      overview: movie.overview || 'Resumo não disponível',
+      releaseDate: movie.releaseDate
+        ? this.formatDate(movie.releaseDate)
+        : 'Data não disponível',
+      genre: this.getGenresNames(movie),
+      image: movie.poster_path
+      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+      : 'assets/default-image.png',
+    };
   
-    this.interacoesService.saveNoticiaToFirestore(noticiaPadronizada)
-      .then(() => {
-        this.navCtrl.navigateForward(['tabs/noticia-detalhes', noticiaPadronizada.id]); // Navega para detalhes
-      })
-      .catch((error) => {
-        console.error('Erro ao salvar a notícia no Firestore:', error);
-      });
+    // Navegar para a página de detalhes e passar os dados
+    this.router.navigate(['/tabs/noticia-detalhes/${detalhes.id}'], { state: { data: detalhes } });
   }
 
   ngOnInit() {
@@ -82,5 +91,14 @@ export class FilmesPage implements OnInit {
       .join(', ');
 
     return genreNames || 'Sem gênero';
+  }
+
+  // Formatar a data no formato "dd/mm/aa"
+  private formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
+    return `${day}/${month}/${year}`;
   }
 }

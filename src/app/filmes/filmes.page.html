@@ -6,13 +6,14 @@
 
 <ion-content>
   <ion-list *ngIf="movies.length; else loading">
-    <ion-card *ngFor="let movie of movies" (click)="abrirDetalhes(movie, 'Filme')">
+    <ion-card *ngFor="let movie of movies" (click)="abrirDetalhes(movie)">
       <img [src]="movie.poster || 'assets/default-image.jpg'" alt="{{ movie.title }}" />
       <ion-card-header>
         <ion-card-title>{{ movie.title }}</ion-card-title>
         <ion-card-subtitle>Lançamento: {{ movie.releaseDate }}</ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
+        <p><strong>Resumo:</strong> {{ movie.overview }}</p>
         <p><strong>Gêneros:</strong> {{ movie.genres }}</p>
         <p><strong>Descrição:</strong> {{ movie.overview }}</p>
         <ion-button fill="outline" [href]="'https://www.themoviedb.org/movie/' + movie.id" target="_blank">
